@@ -72,7 +72,7 @@
     [:meta {:charset "utf-8"}]
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
     (if stylesheet-name
-      [:link {:href (string "/" stylesheet-name) :rel "stylesheet"}]
+      [:link {:href (string "./" stylesheet-name) :rel "stylesheet"}]
       [:style (htmlgen/raw styles)])
     [:script (htmlgen/raw script)]]
    [:body [:main {:class "content"} contents]]])

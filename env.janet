@@ -24,7 +24,7 @@
   [:li
      [:a {:href link :class "index-item"}
       [:span {:class "index-item-title"} title]
-      [:span {:class "index-dots"} ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."]
+      [:span {:class "index-dots"} ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."]
       [:span {:class "index-item-date"} date]]])
 
 (defn aside
@@ -75,6 +75,11 @@
   [url &opt content]
   [:a {:href url} (or content url)])
 
+(defn ntab
+  "A link that opens in a new tab"
+  [url &opt content]
+  [:a {:href url :target "_blank"} (or content url)])
+
 (defn published
   [content]
   [:span {:class "published"} content])
@@ -116,7 +121,7 @@
     (set subsection-counter 1)
     (set subsubsection-counter 1)
     [:h2 {:id id}
-     [:span {:class "section-number"} (string section-number " ")]
+     [:span {:class "section-number"} (string section-number ". ")]
      content]))
 
 (defn subsection
@@ -126,7 +131,8 @@
     (set subsection-counter (inc subsection-counter))
     (set subsubsection-counter 1)
     [:h3 {:id id}
-     [:span {:class "section-number"} (string subsection-number " ")]
+     [:span {:class "section-number"}
+      (string (- section-counter 1) "." subsection-number ". ")]
      content]))
 
 (defn subsubsection
@@ -135,7 +141,8 @@
         id (make-id content)]
     (set subsubsection-counter (inc subsubsection-counter))
     [:h4 {:id id}
-     [:span {:class "section-number"} (string subsubsection-number " ")]
+     [:span {:class "section-number"}
+      (string (- section-counter 1) "." (- subsection-counter 1) "." subsubsection-number ". ")]
      content]))
 
 (defn pikchr

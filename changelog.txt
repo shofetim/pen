@@ -1,0 +1,10 @@
+2024-12-13
+- Add ntab tag for creating links that open in new tabs.
+- Add build script
+
+2024-11-28
+- Adjust index-item's number of dots to handle shorter titles and/or wider layouts
+
+2024-11-27
+- Use a relative path for the css in the general template 
+- Fix subsection and subsubsection numbering
