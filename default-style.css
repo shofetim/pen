@@ -205,8 +205,8 @@ body {
 
 .content ul li,
 .content ol li {
-  margin-top: 1.2em;
-  margin-bottom: 1.2em;
+  margin-top: .2em;
+  margin-bottom: .2em;
 }
 
 hr {
@@ -577,6 +577,9 @@ dd { margin-bottom: 1em; }
   body {
     background: white;
   }
+  h2, h3 {
+    border-top: 1px solid;
+  }
   nav {
     display: none;
   }
@@ -585,7 +588,7 @@ dd { margin-bottom: 1em; }
     font-size: 12pt;
     box-shadow: none;
   }
-  pre, blockquote {
+  p, pre, blockquote {
     page-break-inside: avoid;
   }
 }

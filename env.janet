@@ -7,8 +7,8 @@
   @[])
 
 (each tag
-    ["blockquote" "center" "dl" "dt" "dd" "ul" "ol" "li" "p" "em"
-     "strong" "u" "pre" "sub" "sup" "tr" "td" "th"]
+    ["blockquote" "center" "dl" "dt" "dd" "ul" "ol" "li" "p" "em" "strong" "u"
+     "pre" "sub" "sup" "tr" "td" "th" "h1" "h2" "h3" "h4" "h5"]
   (defglobal tag (fn [content] [(symbol tag) content])))
 
 (defn tag
@@ -49,6 +49,11 @@
   "Embed some raw html"
   [source]
   (htmlgen/raw source))
+
+(defn page-break
+  ""
+  [conten]
+  [:div {:style "page-break-before: always"}])
 
 (defn codeblock
   [content]

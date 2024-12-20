@@ -1,3 +1,9 @@
+2024-12-20
+- Adjust the space between bullet points with the default stylesheet
+- Added h1, h2, h3, h4, h5 tags for HTML header tags
+- Add a @page-break tag which causes print page breaks before the element.
+- Minor fixes to build script
+
 2024-12-13
 - Add ntab tag for creating links that open in new tabs.
 - Add build script

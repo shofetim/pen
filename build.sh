@@ -29,11 +29,10 @@ jpm build
 rm build/build___pen.o build/pen
 cp ../janet/build/janet.h build/
 
-edit pen/build/pen.c to make a local include of janet.h
-sed -i 's/<janet.h>/"janet."/g' build/pen.c
+sed -i 's/<janet.h>/"janet.h"/g' build/pen.c
 
 $BUILDROOT/cosmocc/bin/cosmocc -I$BUILDROOT/janet/build -I$BUILDROOT/cosmos/include -L$BUILDROOT/cosmos/lib -c build/pen.c -DJANET_BUILD_TYPE=release -std=c99 -O2 -o build/build___pen.o
 $BUILDROOT/cosmocc/bin/cosmocc -std=c99 -I$BUILDROOT/janet/build -O2 -o build/pen build/build___pen.o $BUILDROOT/janet/build/libjanet.a -lm -ldl -lrt -pthread -rdynamic
 
-cp $BUILDROOT/pen/build/pen build/
+rm -r $BUILDROOT
 
