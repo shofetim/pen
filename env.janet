@@ -7,8 +7,9 @@
   @[])
 
 (each tag
-    ["blockquote" "center" "dl" "dt" "dd" "ul" "ol" "li" "p" "em" "strong" "u"
-     "pre" "sub" "sup" "tr" "td" "th" "h1" "h2" "h3" "h4" "h5"]
+    ["blockquote" "center" "dl" "dt" "dd" "ul" "ol" "li" "p" "em"
+     "strong" "u" "q" "pre" "sub" "sup" "tr" "td" "th" "h1" "h2" "h3"
+     "h4" "h5"]
   (defglobal tag (fn [content] [(symbol tag) content])))
 
 (defn tag
@@ -158,15 +159,21 @@
     (:close (p :in))
     (htmlgen/raw (:read (p :out) :all))))
 
+
+(array/slice ["" "Hello" "World" ""] 1 -2)
+
 (defn pipe-table
   ```
-  Creates a table from data where fields are seperated by the pipe (|) symbol
-  and rows are seperated by newlines. The first row is used as a header.
+  Creates a table from data where fields are seperated by the pipe (|)
+  symbol and rows are seperated by newlines. Basically markdown pipe
+  tables. The first row is used as a header.
   ```
   [content]
-  (let [data (map |(string/split "|" $) (string/split "\n" content))
+  (let [data (map |(array/slice (string/split "|" $) 1 -2)
+                  (string/split "\n" content))
+        data (filter |(not (empty? $)) data)
         head (first data)
-        body (array/remove data 0 1)]
+        body (array/remove data 0 2)]
     [:table
      [:thead [:tr (map (fn [i] [:th i]) head)]]
      [:tbody

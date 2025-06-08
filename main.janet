@@ -72,7 +72,7 @@
     [:meta {:charset "utf-8"}]
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
     (if stylesheet-name
-      [:link {:href (string "./" stylesheet-name) :rel "stylesheet"}]
+      [:link {:href (string stylesheet-name) :rel "stylesheet"}]
       [:style (htmlgen/raw styles)])
     [:script (htmlgen/raw script)]]
    [:body [:main {:class "content"} contents]]])
@@ -84,7 +84,7 @@
     [:meta {:charset "utf-8"}]
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
     (if stylesheet-name
-      [:link {:href (string "/" stylesheet-name) :rel "stylesheet"}]
+      [:link {:href stylesheet-name :rel "stylesheet"}]
       [:style (htmlgen/raw styles)])]
    [:body
       [:nav
@@ -92,13 +92,17 @@
        [:ul {:class "nav-items"}
         [:li {:class "nav-item"}
          [:a {:href "/projects.html"}
+          [:img {:src "/img/tool.svg" :class "nav-item-icon"}]
+          "Projects"]]
+        [:li {:class "nav-item"}
+         [:a {:href "/writing.html"}
           [:img {:src "/img/pen.svg" :class "nav-item-icon"}]
-          "Projects"]]]
+          "Writing"]]]
        [:a {:class "about" :href "/about.html"} "About"]]
     [:main {:class "content"} contents]
     [:footer
-       [:a {:href "/subscribe.html" :class "footer-link"} "Subscribe"]
-     [:a {:href "/comment.html" :class "footer-link"} "Comment"]]]])
+       [:a {:href "/writing.html" :class "footer-link"} "Subscribe"]
+     [:a {:href "/comment.html" :class "footer-link"} "Feedback"]]]])
 
 (defn help []
   (print `
