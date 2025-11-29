@@ -6,87 +6,122 @@
   "Will store models that will be used in various places throughout the documentation"
   @[])
 
+(defn s-format [pat & args]
+  (defn- flatn [thing]
+    (if (get {:tuple true :array true} (type thing))
+      (string/join thing)
+      (string thing)))
+
+  (string (string/format pat ;(map flatn args)) "\n"))
+
 (each tag
-    ["blockquote" "center" "dl" "dt" "dd" "ul" "ol" "li" "p" "em"
-     "strong" "u" "q" "pre" "sub" "sup" "tr" "td" "th" "h1" "h2" "h3"
-     "h4" "h5"]
-  (defglobal tag (fn [content] [(symbol tag) content])))
+    ["center" "tr" "td" "th"]
+  (defglobal tag (fn [content] (s-format "@%s{%s}" symbol content))))
 
 (defn tag
   "Wrap some content in an html tag. If you need attributes or other properties,
   you may want to use raw HTML via the html function."
   [name content]
-  [(symbol name) content])
+  (s-format "
+// todo
+@%s{%s}
 
-(defn index [content]
+" symbol content))
+
+(defn blockquote [content]
+  (s-format "#quote[
+%s
+]" content))
+
+(defn dl [content] "\n")
+(defn dt [content] (s-format "/ %s" content))
+(defn dd [content] content)
+(defn ul [content] (s-format "%s" content))
+(defn ol [content] "\n")
+(defn li [content] (s-format "- %s" content))
+(defn p [content] (s-format "\n%s\n" content))
+(defn em [content] (s-format "_%s_" content))
+(defn strong [content] (s-format "*%s*" content))
+(defn u [content] (s-format "#underline[%s]" content))
+(defn q [content] (s-format "#quote[%s]" content))
+(defn pre [content] (s-format "`%s`" content))
+(defn sub [content] (s-format "#sub[%s]" content))
+(defn sub [content] (s-format "#super[%s]" content))
+(defn h1 [content] (s-format "= %s" content))
+(defn h2 [content] (s-format "== %s" content))
+(defn h3 [content] (s-format "=== %s" content))
+(defn h4 [content] (s-format "==== %s" content))
+(defn h5 [content] (s-format "===== %s" content))
+
+(defn index [content]              # todo need to rework when know more of typst
   [:ul {:class "index"} content])
 
-(defn index-item [link title date]
+(defn index-item [link title date] # todo need to rework when know more of typst
   [:li
      [:a {:href link :class "index-item"}
       [:span {:class "index-item-title"} title]
       [:span {:class "index-dots"} ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."]
       [:span {:class "index-item-date"} date]]])
 
-(defn aside
+(defn aside                        # todo need to rework when know more of typst
   [content]
   [:div {:class "aside-wrapper" :onclick "showAside(window.event)"}
    [:aside content]])
 
-(defn aside-l
+(defn aside-l                      # todo need to rework when know more of typst
   [content]
   [:div {:class "aside-wrapper" :onclick "showAside(window.event)"}
    [:aside {:class "left-aside" } content]])
 
-(defn hr [] [:hr ])
+(defn hr [&opt content] "#line(length: 100%)")
 
-(defn bigger [content] [:span {:style "font-size:1.61803398875em;"} content])
-(defn smaller [content] [:span {:style "font-size:0.61803398875em;"} content])
+(defn bigger [content]             # todo need to rework when know more of typst
+  [:span {:style "font-size:1.61803398875em;"} content])
 
-(defn image [src] [:img {:src src}])
+(defn smaller [content]            # todo need to rework when know more of typst
+  [:span {:style "font-size:0.61803398875em;"} content])
+
+(defn image [src] (s-format `#image("%s")`))
 (defn img [src] (image src))
 
-(defn html
-  "Embed some raw html"
-  [source]
-  (htmlgen/raw source))
+(defn html [source]
+  (s-format
+   "//todo
+```html
+%s
+```" source))
 
-(defn page-break
-  ""
-  [conten]
-  [:div {:style "page-break-before: always"}])
+(defn page-break [_] "#pagebreak()")
 
-(defn codeblock
-  [content]
-  [:pre [:code (string/trim content)]])
+(defn codeblock [content]
+  (s-format
+   "```\n
+%s\n
+```" (string/trim content)))
 
-(defn code
-  [content]
-  [:code {:class "inline-code"} content])
+(defn code [content] (s-format "`%s`" content))
 
-(defn comment [content] "")
-(defn private [content] "")
+(defn comment [content] (s-format "/* %s */" content))
+(defn private [content] (s-format "/* %s */" content))
 
-(defn title
-  [content]
-  [:h1 content])
+(defn title [content]
+  (s-format `#title("%s")` content))
 
-(defn entry
-  [date-string content]
-  [:article
-     [:h2 (string "Log Entry for: " date-string)]
-   content])
+(defn entry [date-string content]
+  (s-format
+   "= %s
+%s
+" date-string content))
 
-(defn link
-  [url &opt content]
-  [:a {:href url} (or content url)])
+(defn link [url &opt content]
+  (s-format `#link("%s")[%s]` url (or content url)))
 
-(defn ntab
+(defn ntab # typst doesn't have the same concept
   "A link that opens in a new tab"
   [url &opt content]
-  [:a {:href url :target "_blank"} (or content url)])
+  (link url content))
 
-(defn published
+(defn published #todo
   [content]
   [:span {:class "published"} content])
 
@@ -100,9 +135,9 @@
        "-" ""))
    (first content)))
 
-(defn chapter
-  [content]
-  [:h2 {:id (make-id content)} content])
+(defn chapter [content] # todo
+  # [:h2 {:id (make-id content)} content]
+  (s-format `== %s` content))
 
 (defn numeric-id
   [section &opt subsection subsubsection]
@@ -111,56 +146,23 @@
          (filter |(not (nil? $))
                  [section subsection subsubsection])) "."))
 
-(defn anchor
-  [content]
-  [:a {:href (string "#" (make-id content))} content])
+(defn anchor [content]
+  (link (string "#" (make-id content)) content))
 
 (var section-counter 1)
 (var subsection-counter 1)
 (var subsubsection-counter 1)
 
-(defn section
-  [content]
-  (let [section-number section-counter
-        id (make-id content)]
-    (set section-counter (inc section-counter))
-    (set subsection-counter 1)
-    (set subsubsection-counter 1)
-    [:h2 {:id id}
-     [:span {:class "section-number"} (string section-number ". ")]
-     content]))
+(defn section [content] (s-format "= %s" content))
+(defn subsection [content] (s-format "== %s" content))
+(defn subsubsection [content] (s-format "=== %s" content))
 
-(defn subsection
-  [content]
-  (let [subsection-number subsection-counter
-        id (make-id content)]
-    (set subsection-counter (inc subsection-counter))
-    (set subsubsection-counter 1)
-    [:h3 {:id id}
-     [:span {:class "section-number"}
-      (string (- section-counter 1) "." subsection-number ". ")]
-     content]))
-
-(defn subsubsection
-  [content]
-  (let [subsubsection-number subsubsection-counter
-        id (make-id content)]
-    (set subsubsection-counter (inc subsubsection-counter))
-    [:h4 {:id id}
-     [:span {:class "section-number"}
-      (string (- section-counter 1) "." (- subsection-counter 1) "." subsubsection-number ". ")]
-     content]))
-
-(defn pikchr
+(defn pikchr #todo could/should we call out to pikchr to convert?
   `Process block through Pikchr returning SVG`
   [str]
-  (let [p (os/spawn ["pikchr" "--svg-only" "-"] :px {:out :pipe :in :pipe})]
-    (:write (p :in) str)
-    (:close (p :in))
-    (htmlgen/raw (:read (p :out) :all))))
-
-
-(array/slice ["" "Hello" "World" ""] 1 -2)
+  (s-format "```pikchr
+%s
+```" str))
 
 (defn pipe-table
   ```
@@ -182,16 +184,14 @@
            [:tr (map (fn [i] [:td i]) row)])
          body)]]))
 
-(defn verbatim
-  [content]
-  [:span content])
+(defn verbatim [content] content)
 
-(defn- object-name
+(defn- object-name              # not implementing
   [content]
   (let [field (if (string? content) content (first content))]
     (if (string/has-prefix? ":" field) (string/slice field 1) field)))
 
-(defn get-stored-model
+(defn get-stored-model          # not implementing
   [reference]
   (let [model (find |(= reference (first $)) all-models)]
     (if (and  (nil? model)
@@ -200,10 +200,10 @@
               (not (= "Activity_History" (string reference)))
               (not (= "Notes&Attachments" (string reference)))
               (not (= "Notes" (string reference))))
-      (print (string/format "%d - Model for %s not present in the documentation" (set missing-fields-counter (inc missing-fields-counter)) reference)))
+      (print (s-format "%d - Model for %s not present in the documentation" (set missing-fields-counter (inc missing-fields-counter)) reference)))
     model))
 
-(defn get-referenced-field-name
+(defn get-referenced-field-name # not implementing
   [api-name reference]
   (if (nil? reference)
     api-name
@@ -211,11 +211,11 @@
       (def referenced-field (find |(= api-name (get $ 0)) reference))
       (if (nil? referenced-field)
         (do
-          (print (string/format "%d - Field %s not present in the model %s" (set missing-fields-counter (inc missing-fields-counter)) api-name (reference 0)))
+          (print (s-format "%d - Field %s not present in the model %s" (set missing-fields-counter (inc missing-fields-counter)) api-name (reference 0)))
           api-name)
         (get referenced-field 1)))))
 
-(defn f
+(defn f                         # not implementing
   "Field name; link to field definition in @model"
   [content]
   (let [field (object-name content)
@@ -225,7 +225,7 @@
         stored-field (get-referenced-field-name (parse full-field-name) stored-object)]
     [:a {:class "object" :href (string "#" field)} field]))
 
-(defn o
+(defn o                         # not implementing
   [content]
   (let [object (object-name content)
         full-object-name (if (string? content) content (first content))

@@ -8,5 +8,5 @@
  :repo "https://github.com/shofetim/pen")
 
 (declare-executable
- :name "pen"
+ :name "pen-to-typst"
  :entry "main.janet")

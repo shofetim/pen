@@ -65,17 +65,7 @@
   "A peg that converts pen to html."
   (peg/compile markup-grammar))
 
-(defn default-template [contents stylesheet-name]
-  [:html {:lang "en"}
-   [:head
-    [:title (get-in (filter array? (get contents 0)) [0 0])]
-    [:meta {:charset "utf-8"}]
-    [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-    (if stylesheet-name
-      [:link {:href (string stylesheet-name) :rel "stylesheet"}]
-      [:style (htmlgen/raw styles)])
-    [:script (htmlgen/raw script)]]
-   [:body [:main {:class "content"} contents]]])
+(defn default-template [contents stylesheet-name] contents)
 
 (defn template-jordanschatz.com [contents stylesheet-name]
   [:html {:lang "en"}
@@ -130,6 +120,11 @@ provided css stylesheet name, use the second.
 
 (def env (require "./env"))
 
+(defn handle-p [thing]
+  (if (get {:tuple true :array true} (type thing))
+    (string/join (flatten (array/slice thing 1)))
+    (string thing)))
+
 (defn main
   "filename.pen -> filename.html"
   [& args]
@@ -150,6 +145,5 @@ provided css stylesheet name, use the second.
           _ (set purpose "parse")
           thunk (compile (peg/match pen-peg (slurp filename)) env)
           parsed (thunk)
-          template (if (= (get args 3) "jordanschatz.com") template-jordanschatz.com default-template)
-          html (htmlgen/html (template parsed (get args 2)) @"<!DOCTYPE html>")]
-      (spit (string "./" base ".html") html))))
+         typst (string/join (map handle-p parsed))]
+      (spit (string "./" base ".typ") typst))))
