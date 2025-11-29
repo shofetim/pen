@@ -54,14 +54,19 @@
 (defn h5 [content] (s-format "===== %s" content))
 
 (defn index [content]              # todo need to rework when know more of typst
-  [:ul {:class "index"} content])
+  # [:ul {:class "index"} content]
+  (s-format
+   "#index[
+%s
+]" content))
 
 (defn index-item [link title date] # todo need to rework when know more of typst
-  [:li
-     [:a {:href link :class "index-item"}
-      [:span {:class "index-item-title"} title]
-      [:span {:class "index-dots"} ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."]
-      [:span {:class "index-item-date"} date]]])
+  # [:li
+  #    [:a {:href link :class "index-item"}
+  #     [:span {:class "index-item-title"} title]
+  #     [:span {:class "index-dots"} ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."]
+  #     [:span {:class "index-item-date"} date]]]
+  (s-format "#index-item(link title data)"))
 
 (defn aside                        # todo need to rework when know more of typst
   [content]
@@ -123,7 +128,8 @@
 
 (defn published #todo
   [content]
-  [:span {:class "published"} content])
+  # [:span {:class "published"} content]
+  (s-format "#published[%s]" content))
 
 (defn make-id
   "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id"

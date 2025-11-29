@@ -8,3 +8,14 @@
 }
 
 @em{lorem ipsum dolar set amet}
+
+
+@html`
+<form class="subscribe" action=./confirmed.html>
+  <input name="email" type="email" placeholder="you@email.com"></input>
+  <button type="submit">Get the email</button>
+</form>
+`
+
+
+@published[2019-06-13]
